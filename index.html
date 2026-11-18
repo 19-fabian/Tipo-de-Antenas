@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antenas: Dipolo, Bocina y Parabólica</title>
+  <meta name="description" content="Presentación interactiva sobre antenas dipolo, bocina y parabólica — Universidad de Cundinamarca, Ingeniería Electrónica." />
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- KaTeX (fórmulas) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ============ CAPAS GLOBALES ============ -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Barra superior: progreso, contador e índice -->
+  <div id="progress"><div id="progress-bar"></div></div>
+  <header id="topbar">
+    <div class="brand"><span class="brand-dot"></span>UdeC · Antenas</div>
+    <div class="top-actions">
+      <span id="counter">1 / 16</span>
+      <button id="btn-index" class="icon-btn" title="Índice (I)" aria-label="Abrir índice">☰</button>
+      <button id="btn-notes" class="icon-btn" title="Notas del expositor (N)" aria-label="Notas">✎</button>
+      <button id="btn-fs" class="icon-btn" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶</button>
+    </div>
+  </header>
+
+  <!-- Menú índice -->
+  <nav id="index-menu" aria-label="Índice de diapositivas">
+    <h3>Índice</h3>
+    <ol id="index-list"></ol>
+  </nav>
+
+  <!-- Panel de notas del expositor -->
+  <aside id="notes-panel" aria-live="polite">
+    <div class="notes-head">
+      <span class="notes-label">Notas del expositor</span>
+      <button id="notes-close" class="icon-btn" aria-label="Cerrar notas">✕</button>
+    </div>
+    <div id="notes-speaker"></div>
+    <div id="notes-body"></div>
+    <p class="notes-hint">Atajos: ← → espacio · F pantalla completa · N notas · I índice</p>
+  </aside>
+
+  <!-- Flechas de navegación -->
+  <div id="nav-arrows">
+    <button id="nav-prev" class="icon-btn" aria-label="Anterior">‹</button>
+    <button id="nav-next" class="icon-btn" aria-label="Siguiente">›</button>
+  </div>
+
+  <!-- ============ DIAPOSITIVAS ============ -->
+  <main id="deck">
+
+    <!-- 1. PORTADA -->
+    <section class="slide theme-portada" id="s1" data-title="Portada" data-transition="zoom">
+      <canvas class="three-canvas three-full" data-scene="portada"></canvas>
+      <div class="slide-inner portada">
+        <div class="portada-text">
+          <p class="kicker reveal">Universidad de Cundinamarca · Ingeniería Electrónica</p>
+          <h1 class="hero reveal">Antenas<span class="hero-colon">:</span></h1>
+          <h2 class="hero-sub reveal">
+            <span class="c-cyan">Dipolo</span>, <span class="c-orange">Bocina</span> y <span class="c-violet">Parabólica</span>
+          </h2>
+          <p class="subtitle reveal">Teoría Electromagnética y Antenas · Exposición</p>
+          <ul class="team">
+            <li class="member" data-anim="1"><span class="mdot bg-cyan"></span>Fabián Steven Vargas</li>
+            <li class="member" data-anim="2"><span class="mdot bg-orange"></span>Sharon Mawenzy Martínez</li>
+            <li class="member" data-anim="3"><span class="mdot bg-violet"></span>Brayan Stiven Correa</li>
+          </ul>
+          
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Fabián Steven Vargas">
+        <p>Saludo inicial y presentación del grupo: Fabián, Sharon y Brayan.</p>
+        <p>Objetivo: entender cómo funcionan tres antenas fundamentales — dipolo, bocina y parabólica —, sus parámetros y dónde se usan.</p>
+        <p>Comentar que la presentación tiene simuladores en vivo: se pueden mover los controles durante la exposición.</p>
+      </aside>
+    </section>
+
+    <!-- 2. ¿QUÉ ES UNA ANTENA? -->
+    <section class="slide" id="s2" data-title="¿Qué es una antena?" data-transition="slide">
+      <div class="slide-inner">
+        <p class="kicker reveal">Fundamentos</p>
+        <h2 class="title reveal">¿Qué es una antena?</h2>
+        <div class="grid-2 wide-right">
+          <div class="stack">
+            <p class="lead reveal">Es el <strong>transductor</strong> entre una <span class="c-cyan">onda guiada</span> (línea de transmisión, guía de onda) y una <span class="c-violet">onda radiada</span> que viaja por el espacio libre.</p>
+            <ul class="bullets reveal">
+              <li>Las cargas aceleradas en el conductor generan campos <strong>E</strong> y <strong>H</strong> que se desprenden de la antena.</li>
+              <li>En campo lejano, E ⊥ H ⊥ dirección de propagación (onda TEM).</li>
+              <li>Es <strong>recíproca</strong>: funciona igual en transmisión y en recepción.</li>
+            </ul>
+            <div class="formula-box reveal">
+              $$\lambda = \frac{c}{f}\qquad \eta_0=\frac{|\mathbf{E}|}{|\mathbf{H}|}\approx 377\ \Omega$$
+            </div>
+          </div>
+          <div class="canvas-card glass reveal">
+            <canvas id="cv-queEs" class="sim-canvas"></canvas>
+            <div class="legend">
+              <span><i class="sw bg-cyan"></i>Campo E</span>
+              <span><i class="sw bg-violet"></i>Campo H</span>
+              <span><i class="sw bg-orange"></i>Onda guiada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Sharon Mawenzy Martínez">
+        <p>Una antena es la "interfaz" entre el circuito y el espacio libre: adapta la onda que viaja confinada en la línea a una onda que se propaga libremente.</p>
+        <p>Señalar en la animación: a la izquierda la onda guiada entre los conductores; a la derecha el campo E (cian, vertical) y H (violeta, horizontal) perpendiculares entre sí.</p>
+        <p>Recordar la relación λ = c/f y la impedancia del espacio libre ≈ 377 Ω.</p>
+      </aside>
+    </section>
+
+    <!-- 3. PARÁMETROS FUNDAMENTALES -->
+    <section class="slide" id="s3" data-title="Parámetros fundamentales" data-transition="rotate">
+      <div class="slide-inner">
+        <p class="kicker reveal">Fundamentos</p>
+        <h2 class="title reveal">Parámetros fundamentales <small class="muted"></small></h2>
+        <div class="flip-grid">
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">◎</span><h3>Diagrama de radiación</h3></div>
+            <div class="flip-back glass"><p>Representación de cómo la antena distribuye la energía en el espacio, en función de \(\theta\) y \(\phi\).</p><p class="f">\(F(\theta,\phi)=\dfrac{|E(\theta,\phi)|}{|E|_{máx}}\)</p></div>
+          </div></div>
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">D</span><h3>Directividad</h3></div>
+            <div class="flip-back glass"><p>Cuánto concentra la antena la radiación en su dirección máxima respecto a una isotrópica.</p><p class="f">\(D=\dfrac{4\pi U_{máx}}{P_{rad}}\)</p></div>
+          </div></div>
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">G</span><h3>Ganancia</h3></div>
+            <div class="flip-back glass"><p>Directividad afectada por las pérdidas. Se expresa en dBi.</p><p class="f">\(G=\varepsilon\,D,\quad G_{dBi}=10\log_{10}G\)</p></div>
+          </div></div>
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">ε</span><h3>Eficiencia</h3></div>
+            <div class="flip-back glass"><p>Fracción de la potencia entregada que realmente se radia.</p><p class="f">\(\varepsilon=\dfrac{R_{rad}}{R_{rad}+R_{L}}\)</p></div>
+          </div></div>
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">θ<sub>3dB</sub></span><h3>Ancho de haz (HPBW)</h3></div>
+            <div class="flip-back glass"><p>Ángulo entre los puntos de media potencia (−3 dB) del lóbulo principal.</p><p class="f">\(F^2(\theta_{3dB})=\tfrac12\)</p></div>
+          </div></div>
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">Z</span><h3>Impedancia</h3></div>
+            <div class="flip-back glass"><p>Impedancia vista en los terminales; debe adaptarse a la línea para minimizar reflexiones.</p><p class="f">\(Z_A=R_A+jX_A,\ \ \Gamma=\dfrac{Z_A-Z_0}{Z_A+Z_0}\)</p></div>
+          </div></div>
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">⟲</span><h3>Polarización</h3></div>
+            <div class="flip-back glass"><p>Orientación del vector E en el tiempo: lineal, circular o elíptica.</p><p class="f">\(PLF=|\hat\rho_w\cdot\hat\rho_a|^2\)</p></div>
+          </div></div>
+          <div class="flip-card reveal"><div class="flip-inner">
+            <div class="flip-front glass"><span class="glyph">Δf</span><h3>Ancho de banda</h3></div>
+            <div class="flip-back glass"><p>Rango de frecuencias donde los parámetros se mantienen aceptables.</p><p class="f">\(BW\%=\dfrac{f_H-f_L}{f_c}\times100\)</p></div>
+          </div></div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Sharon Mawenzy Martínez">
+        <p>Voltear las tarjetas una a una mientras se explica.</p>
+        <p>Clave: la directividad solo mide "qué tan concentrado" es el haz; la ganancia además incluye pérdidas (G = ε·D).</p>
+        <p>HPBW: ángulo a −3 dB. Impedancia: si no está adaptada aparece onda reflejada (ROE). Polarización: si no coinciden Tx y Rx hay pérdidas por desacople (PLF).</p>
+      </aside>
+    </section>
+
+    <!-- 4. DIPOLO: CONCEPTO -->
+    <section class="slide theme-dipolo" id="s4" data-title="Dipolo: concepto y geometría" data-transition="zoom">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Dipolo</span> 1 / 4</p>
+        <h2 class="title reveal">Concepto y geometría</h2>
+        <div class="grid-2">
+          <div class="stack">
+            <p class="lead reveal">Dos conductores rectos y colineales de longitud total <strong>L</strong>, alimentados en el centro por una línea de transmisión.</p>
+            <ul class="bullets reveal">
+              <li>El más usado es el <strong class="c-cyan">dipolo de media onda</strong> (L ≈ λ/2).</li>
+              <li>Radiación <strong>omnidireccional</strong> en el plano perpendicular al eje: forma de "dona".</li>
+              <li>Nulos de radiación a lo largo de su propio eje.</li>
+            </ul>
+            <div class="formula-box reveal">
+              $$L\approx\frac{\lambda}{2}=\frac{c}{2f}\qquad\text{Ej.: }f=100\text{ MHz}\Rightarrow L\approx1.5\text{ m}$$
+            </div>
+            <p class="small muted reveal">En la práctica se acorta ~5 % (L ≈ 0.47–0.48 λ) para anular la reactancia.</p>
+          </div>
+          <div class="canvas-card glass reveal three-card">
+            <canvas class="three-canvas" data-scene="dipoloModel" data-interactive></canvas>
+            <span class="drag-hint">⟲ Arrastra para girar</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Fabián Steven Vargas">
+        <p>Mostrar el modelo 3D: dos brazos conductores, la alimentación en el centro (punto naranja) y la línea de transmisión.</p>
+        <p>La envolvente violeta es el diagrama de radiación: una dona; no radia a lo largo del eje del dipolo.</p>
+        <p>Ejemplo numérico: a 100 MHz (banda FM) λ = 3 m, así que el dipolo mide unos 1.5 m.</p>
+      </aside>
+    </section>
+
+    <!-- 5. DIPOLO: CORRIENTE -->
+    <section class="slide theme-dipolo" id="s5" data-title="Dipolo: distribución de corriente" data-transition="dissolve">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Dipolo</span> 2 / 4</p>
+        <h2 class="title reveal">Distribución de corriente</h2>
+        <div class="grid-2 wide-left">
+          <div class="canvas-card glass reveal">
+            <canvas id="cv-corriente" class="sim-canvas tall"></canvas>
+            <div class="legend">
+              <span><i class="sw bg-cyan"></i>Corriente I(z,t)</span>
+              <span><i class="sw bg-violet"></i>Tensión / carga</span>
+            </div>
+          </div>
+          <div class="stack">
+            <p class="lead reveal">La corriente forma una <strong>onda estacionaria</strong> senoidal sobre los brazos.</p>
+            <div class="formula-box reveal">
+              $$I(z)=I_0\,\sin\!\Big[k\Big(\tfrac{L}{2}-|z|\Big)\Big]$$
+              $$L=\tfrac{\lambda}{2}\ \Rightarrow\ I(z)=I_0\cos(kz)$$
+            </div>
+            <ul class="bullets reveal">
+              <li><strong class="c-cyan">Máxima</strong> en el punto de alimentación → baja impedancia (≈ 73 Ω).</li>
+              <li><strong>Cero</strong> en los extremos abiertos.</li>
+              <li>La tensión es máxima en las puntas (desfasada 90°).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Fabián Steven Vargas">
+        <p>La animación muestra la corriente instantánea oscilando en el tiempo dentro de su envolvente cos(kz).</p>
+        <p>En el centro la corriente es máxima y la tensión mínima: por eso la impedancia de entrada es baja (≈ 73 Ω). En las puntas la corriente es cero y la tensión máxima.</p>
+        <p>Ambos brazos llevan corriente en el mismo sentido: sus campos se suman en el plano perpendicular.</p>
+      </aside>
+    </section>
+
+    <!-- 6. DIPOLO: SIMULADOR -->
+    <section class="slide theme-dipolo" id="s6" data-title="Simulador: patrón del dipolo" data-transition="slide">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Dipolo</span> 3 / 4 · Simulador</p>
+        <h2 class="title reveal">Patrón de radiación vs. longitud</h2>
+        <div class="sim-layout">
+          <div class="sim-controls glass reveal">
+            <div class="formula-box compact">
+              $$E(\theta)=\frac{\cos\!\left(\frac{kL}{2}\cos\theta\right)-\cos\!\left(\frac{kL}{2}\right)}{\sin\theta}$$
+            </div>
+            <label class="control">
+              <span>Longitud <strong>L/λ</strong> <output id="out-L">0.50</output></span>
+              <input type="range" id="rng-L" min="0.1" max="2" step="0.01" value="0.5" />
+            </label>
+            <div class="chips">
+              <button class="chip" data-L="0.1">0.1λ</button>
+              <button class="chip" data-L="0.5">λ/2</button>
+              <button class="chip" data-L="1">λ</button>
+              <button class="chip" data-L="1.25">1.25λ</button>
+              <button class="chip" data-L="1.5">1.5λ</button>
+              <button class="chip" data-L="2">2λ</button>
+            </div>
+            <div class="readouts">
+              <div class="readout"><span class="rl">Directividad</span><span class="rv" id="ro-D">1.64</span><span class="ru" id="ro-DdB">2.15 dBi</span></div>
+              <div class="readout"><span class="rl">HPBW lóbulo mayor</span><span class="rv" id="ro-hpbw">78</span><span class="ru">°</span></div>
+              <div class="readout"><span class="rl">Lóbulos (0–180°)</span><span class="rv" id="ro-lobes">1</span><span class="ru">lóbulos</span></div>
+              <div class="readout"><span class="rl">Máximo en</span><span class="rv" id="ro-tmax">90</span><span class="ru">° (θ)</span></div>
+            </div>
+            <div class="toggle-row">
+              <button class="btn active" id="btn-2d">Vista 2D polar</button>
+              <button class="btn" id="btn-3d">Vista 3D</button>
+            </div>
+          </div>
+          <div class="canvas-card glass reveal sim-view">
+            <canvas id="cv-dipoloPolar" class="sim-canvas fill" data-interactive></canvas>
+            <canvas class="three-canvas fill hidden" id="cv-dipolo3d" data-scene="dipolePattern" data-interactive></canvas>
+            <span class="view-badge" id="dip-badge">Plano E · θ medido desde el eje del dipolo</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Fabián Steven Vargas">
+        <p>Mover el slider desde 0.1λ: el dipolo corto tiene un patrón casi igual a sinθ (D = 1.5).</p>
+        <p>En λ/2: D = 1.64 (2.15 dBi), HPBW ≈ 78°. En 1.25λ el lóbulo principal es más angosto y la directividad es máxima: D ≈ 3.3 (5.2 dBi, unos 3 dB más que λ/2).</p>
+        <p>Por encima de λ aparecen lóbulos secundarios; en 2λ ya no hay radiación a 90°: la corriente en los brazos se cancela. Cambiar a vista 3D y girar el sólido.</p>
+      </aside>
+    </section>
+
+    <!-- 7. DIPOLO: DATOS CLAVE -->
+    <section class="slide theme-dipolo" id="s7" data-title="Dipolo: datos clave y aplicaciones" data-transition="rotate">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Dipolo</span> 4 / 4</p>
+        <h2 class="title reveal">Datos clave del dipolo λ/2</h2>
+        <div class="stats">
+          <div class="stat glass tilt reveal"><span class="stat-num" data-count="73" data-dec="0">0</span><span class="stat-unit">Ω</span><span class="stat-lbl">Resistencia de radiación R<sub>rad</sub></span></div>
+          <div class="stat glass tilt reveal"><span class="stat-num" data-count="1.64" data-dec="2">0</span><span class="stat-unit">(2.15 dBi)</span><span class="stat-lbl">Directividad D</span></div>
+          <div class="stat glass tilt reveal"><span class="stat-num" data-count="78" data-dec="0">0</span><span class="stat-unit">°</span><span class="stat-lbl">Ancho de haz HPBW</span></div>
+          <div class="stat glass tilt reveal"><span class="stat-num" data-count="42.5" data-dec="1">0</span><span class="stat-unit">j Ω</span><span class="stat-lbl">Reactancia (Z ≈ 73 + j42.5 Ω)</span></div>
+        </div>
+        <h3 class="subhead reveal">Aplicaciones</h3>
+        <div class="apps-grid three">
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><path d="M24 30v14M14 44h20M24 30a6 6 0 1 0 0-.01M12 18a17 17 0 0 1 24 0M6 12a26 26 0 0 1 36 0"/></svg>
+            <h4>Radio FM</h4><p>88–108 MHz: dipolos de λ/2 (~1.5 m) en receptores y arreglos de transmisión.</p>
+          </div>
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><rect x="6" y="14" width="36" height="24" rx="3"/><path d="M18 44h12M16 4l8 10 8-10"/></svg>
+            <h4>Televisión</h4><p>Elemento activo de antenas Yagi-Uda y "orejas de conejo" en VHF/UHF.</p>
+          </div>
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><path d="M6 40h36M10 40V20M20 40V10M30 40V24M40 40V16"/></svg>
+            <h4>Referencia de medida</h4><p>Antena patrón: la ganancia en dBd se mide respecto al dipolo (0 dBd = 2.15 dBi).</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Fabián Steven Vargas">
+        <p>Resumir los números clave: R_rad ≈ 73 Ω (se adapta bien a cable de 75 Ω), D = 1.64 (2.15 dBi) y HPBW ≈ 78°.</p>
+        <p>La parte reactiva (j42.5 Ω) se cancela acortando un poco el dipolo.</p>
+        <p>Aplicaciones: FM, TV y, muy importante, como antena de referencia: los dBd se miden respecto al dipolo. Paso la palabra a Sharon con la bocina.</p>
+      </aside>
+    </section>
+
+    <!-- 8. BOCINA: CONCEPTO Y TIPOS -->
+    <section class="slide theme-bocina" id="s8" data-title="Bocina: concepto y tipos" data-transition="slide">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Bocina</span> 1 / 4</p>
+        <h2 class="title reveal">Una guía de onda que se abre</h2>
+        <div class="grid-2">
+          <div class="stack">
+            <p class="lead reveal">La bocina (<em>horn</em>) ensancha gradualmente una guía de onda para adaptar su impedancia a la del espacio libre y dirigir la energía.</p>
+            <div class="selector reveal" id="horn-selector">
+              <button class="btn active" data-horn="E">Sectorial E</button>
+              <button class="btn" data-horn="H">Sectorial H</button>
+              <button class="btn" data-horn="P">Piramidal</button>
+              <button class="btn" data-horn="C">Cónica</button>
+            </div>
+            <div class="glass info-card reveal" id="horn-info">
+              <h4>Sectorial plano E</h4>
+              <p>Se abre solo en la dimensión <strong>b</strong> (paralela al campo E). Haz angosto en el plano E y ancho en el plano H.</p>
+            </div>
+          </div>
+          <div class="canvas-card glass reveal three-card">
+            <canvas class="three-canvas" data-scene="horn" data-interactive></canvas>
+            <span class="drag-hint">⟲ Arrastra para girar</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Sharon Mawenzy Martínez">
+        <p>La bocina nace de una guía de onda abierta: si solo cortamos la guía, la discontinuidad refleja mucha energía. Abrirla gradualmente reduce esa reflexión.</p>
+        <p>Recorrer los 4 tipos con el selector: sectorial E (se abre en b), sectorial H (se abre en a), piramidal (en ambas: la más común) y cónica (desde guía circular).</p>
+      </aside>
+    </section>
+
+    <!-- 9. BOCINA: ONDA -->
+    <section class="slide theme-bocina" id="s9" data-title="Bocina: propagación de la onda" data-transition="dissolve">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Bocina</span> 2 / 4</p>
+        <h2 class="title reveal">De la guía al espacio libre</h2>
+        <div class="grid-2 wide-left">
+          <div class="canvas-card glass reveal">
+            <canvas id="cv-hornWave" class="sim-canvas tall"></canvas>
+            <div class="legend">
+              <span><i class="sw bg-orange"></i>Frentes de onda</span>
+              <span>Guía (TE<sub>10</sub>) → Bocina → Espacio libre</span>
+            </div>
+          </div>
+          <div class="stack">
+            <ul class="bullets reveal">
+              <li>En la guía los frentes son <strong>planos</strong> (modo TE<sub>10</sub>).</li>
+              <li>Dentro de la bocina se curvan: frentes <strong>cilíndricos/esféricos</strong> centrados en el vértice.</li>
+              <li>La transición gradual es un <strong class="c-orange">transformador de impedancia</strong>: Z<sub>guía</sub> → 377 Ω.</li>
+              <li>Si la bocina es muy corta y abierta, aparece <strong>error de fase</strong> en la apertura y cae la ganancia.</li>
+            </ul>
+            <div class="formula-box reveal">
+              $$\delta_{máx}\approx\frac{(A/2)^2}{2\lambda\,\rho}\quad(\text{error de fase, en }\lambda)$$
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Sharon Mawenzy Martínez">
+        <p>Seguir con el dedo un frente de onda: plano dentro de la guía, curvo dentro de la bocina y esférico al salir.</p>
+        <p>La curvatura provoca que el borde de la apertura esté desfasado respecto al centro: es el error de fase. Por eso existe una "bocina óptima" que equilibra longitud y apertura.</p>
+      </aside>
+    </section>
+
+    <!-- 10. BOCINA: SIMULADOR -->
+    <section class="slide theme-bocina" id="s10" data-title="Simulador: ganancia de la bocina" data-transition="zoom">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Bocina</span> 3 / 4 · Simulador</p>
+        <h2 class="title reveal">Bocina piramidal: ganancia y ancho de haz</h2>
+        <div class="sim-layout">
+          <div class="sim-controls glass reveal">
+            <div class="formula-box compact">
+              $$G=\varepsilon_{ap}\frac{4\pi ab}{\lambda^2},\ \ \varepsilon_{ap}\approx0.51$$
+              $$\theta_E\approx\frac{56\lambda}{b},\quad\theta_H\approx\frac{67\lambda}{a}$$
+            </div>
+            <label class="control">
+              <span>Frecuencia <strong>f</strong> <output id="out-hf">10.0 GHz</output></span>
+              <input type="range" id="rng-hf" min="1" max="40" step="0.1" value="10" />
+            </label>
+            <label class="control">
+              <span>Apertura <strong>a</strong> (plano H) <output id="out-ha">12.0 cm</output></span>
+              <input type="range" id="rng-ha" min="1" max="60" step="0.1" value="12" />
+            </label>
+            <label class="control">
+              <span>Apertura <strong>b</strong> (plano E) <output id="out-hb">9.0 cm</output></span>
+              <input type="range" id="rng-hb" min="1" max="50" step="0.1" value="9" />
+            </label>
+            <div class="readouts">
+              <div class="readout"><span class="rl">Longitud de onda λ</span><span class="rv" id="ro-hl">3.00</span><span class="ru">cm</span></div>
+              <div class="readout"><span class="rl">Ganancia lineal</span><span class="rv" id="ro-hG">76.9</span><span class="ru">veces</span></div>
+              <div class="readout"><span class="rl">HPBW plano E</span><span class="rv" id="ro-hE">18.7</span><span class="ru">°</span></div>
+              <div class="readout"><span class="rl">HPBW plano H</span><span class="rv" id="ro-hH">16.8</span><span class="ru">°</span></div>
+            </div>
+            <p class="warn" id="horn-warn"></p>
+          </div>
+          <div class="canvas-card glass reveal sim-view">
+            <canvas id="cv-hornGauge" class="sim-canvas fill"></canvas>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Sharon Mawenzy Martínez">
+        <p>Valores iniciales: 10 GHz, a = 12 cm, b = 9 cm → G ≈ 18.9 dBi y haz de ~17–19°.</p>
+        <p>Subir la frecuencia con la apertura fija: λ disminuye, la apertura "eléctrica" crece y la ganancia sube (+6 dB al duplicar f).</p>
+        <p>Si la apertura es menor que λ las fórmulas dejan de ser válidas: el simulador lo advierte. El rectángulo a la derecha compara la apertura con un cuadrado de λ × λ.</p>
+      </aside>
+    </section>
+
+    <!-- 11. BOCINA: APLICACIONES -->
+    <section class="slide theme-bocina" id="s11" data-title="Bocina: aplicaciones" data-transition="rotate">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Bocina</span> 4 / 4</p>
+        <h2 class="title reveal">Aplicaciones de la bocina</h2>
+        <div class="apps-grid three">
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><path d="M6 6c20 4 32 16 36 36M10 40l14-14M24 26l-4-8 12 2z"/></svg>
+            <h4>Alimentador de parabólicas</h4>
+            <p>Ilumina el reflector desde el foco con un patrón controlado y bajo desborde (<em>spillover</em>). Suele usarse bocina cónica corrugada.</p>
+          </div>
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><path d="M4 44h40M8 44V8h32v36M12 12l4 6 4-6 4 6 4-6 4 6 4-6"/></svg>
+            <h4>Cámara anecoica</h4>
+            <p>Antena patrón de ganancia conocida (cálculo preciso) para medir otras antenas; gran ancho de banda.</p>
+          </div>
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="10"/><path d="M24 24L38 12"/><circle cx="34" cy="30" r="2"/></svg>
+            <h4>Radar</h4>
+            <p>Radares de tráfico (pistolas de velocidad), radares de corto alcance y sensores en microondas (10–40 GHz).</p>
+          </div>
+        </div>
+        <div class="callout glass reveal">
+          <strong class="c-orange">¿Por qué la bocina?</strong> Es simple, robusta, de banda ancha, de bajas pérdidas y su ganancia se puede calcular con mucha precisión.
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Sharon Mawenzy Martínez">
+        <p>Tres usos principales: alimentar reflectores (la bocina vive en el foco de la parabólica), servir como patrón de ganancia en cámaras anecoicas y en radares.</p>
+        <p>Ventajas: banda ancha, bajas pérdidas y ganancia predecible. Paso la palabra a Brayan con la parabólica.</p>
+      </aside>
+    </section>
+
+    <!-- 12. PARABÓLICA: CONCEPTO -->
+    <section class="slide theme-parabola" id="s12" data-title="Parabólica: propiedad del foco" data-transition="zoom">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Parabólica</span> 1 / 4</p>
+        <h2 class="title reveal">La propiedad del foco</h2>
+        <div class="sim-layout">
+          <div class="sim-controls glass reveal">
+            <p>Todo rayo paralelo al eje se refleja hacia el <strong class="c-violet">foco</strong>; todos recorren la <strong>misma distancia</strong> → llegan en fase.</p>
+            <div class="formula-box compact">$$y^2=4fx\qquad \frac{f}{D}\approx0.25\!-\!0.5$$</div>
+            <div class="toggle-row">
+              <button class="btn active" id="btn-rx">Recepción</button>
+              <button class="btn" id="btn-tx">Transmisión</button>
+            </div>
+            <label class="control">
+              <span>Alimentador eje axial <output id="out-fx">0.00 f</output></span>
+              <input type="range" id="rng-fx" min="-0.5" max="0.5" step="0.01" value="0" />
+            </label>
+            <label class="control">
+              <span>Alimentador lateral <output id="out-fy">0.00 f</output></span>
+              <input type="range" id="rng-fy" min="-0.4" max="0.4" step="0.01" value="0" />
+            </label>
+            <div class="readouts">
+              <div class="readout"><span class="rl" id="ro-pf-l">Energía captada</span><span class="rv" id="ro-pf">100</span><span class="ru" id="ro-pf-u">%</span></div>
+              <div class="readout"><span class="rl">Estado</span><span class="rv small-rv" id="ro-pf-s">Enfocado</span><span class="ru"></span></div>
+            </div>
+          </div>
+          <div class="canvas-card glass reveal sim-view">
+            <canvas id="cv-focus" class="sim-canvas fill"></canvas>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Brayan Stiven Correa">
+        <p>En recepción: los rayos de un satélite llegan paralelos y el paraboloide los concentra en el foco, donde va el alimentador (normalmente una bocina).</p>
+        <p>Mover el slider: si el alimentador se aleja del foco se pierde energía (desenfoque). En modo transmisión se ve el efecto inverso: los rayos dejan de salir paralelos y el haz se abre o se desvía (desenfoque lateral = beam squint).</p>
+      </aside>
+    </section>
+
+    <!-- 13. PARABÓLICA: TIPOS -->
+    <section class="slide theme-parabola" id="s13" data-title="Parabólica: tipos de alimentación" data-transition="slide">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Parabólica</span> 2 / 4</p>
+        <h2 class="title reveal">Tipos de alimentación</h2>
+        <div class="types-grid">
+          <div class="type-card glass reveal"><canvas class="sim-canvas type-cv" data-type="front"></canvas><h4>Frontal (foco primario)</h4><p>Alimentador en el foco. Simple, pero bloquea parte de la apertura.</p></div>
+          <div class="type-card glass reveal"><canvas class="sim-canvas type-cv" data-type="offset"></canvas><h4>Offset</h4><p>Sección asimétrica del paraboloide: sin bloqueo. Típica en TV satelital.</p></div>
+          <div class="type-card glass reveal"><canvas class="sim-canvas type-cv" data-type="cass"></canvas><h4>Cassegrain</h4><p>Subreflector <strong>hiperbólico</strong> convexo; alimentador en el vértice.</p></div>
+          <div class="type-card glass reveal"><canvas class="sim-canvas type-cv" data-type="greg"></canvas><h4>Gregoriana</h4><p>Subreflector <strong>elíptico</strong> cóncavo, ubicado después del foco.</p></div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Brayan Stiven Correa">
+        <p>Frontal: la más simple; el alimentador y sus soportes tapan parte de la apertura.</p>
+        <p>Offset: se usa un trozo del paraboloide; el alimentador queda fuera del haz. Por eso las antenas de TV satelital se ven "inclinadas".</p>
+        <p>Cassegrain y Gregoriana: doble reflector; el equipo pesado queda detrás del plato, con líneas cortas. Cassegrain = hipérbola antes del foco; Gregoriana = elipse después del foco.</p>
+      </aside>
+    </section>
+
+    <!-- 14. PARABÓLICA: SIMULADOR -->
+    <section class="slide theme-parabola" id="s14" data-title="Simulador: ganancia de la parabólica" data-transition="dissolve">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Parabólica</span> 3 / 4 · Simulador</p>
+        <h2 class="title reveal">Ganancia y ancho de haz del reflector</h2>
+        <div class="sim-layout">
+          <div class="sim-controls glass reveal">
+            <div class="formula-box compact">
+              $$G=\eta\left(\frac{\pi D}{\lambda}\right)^2\qquad \theta_{3dB}\approx\frac{70\,\lambda}{D}$$
+            </div>
+            <label class="control">
+              <span>Diámetro <strong>D</strong> <output id="out-pD">1.20 m</output></span>
+              <input type="range" id="rng-pD" min="0.3" max="10" step="0.01" value="1.2" />
+            </label>
+            <label class="control">
+              <span>Frecuencia <strong>f</strong> <output id="out-pf">12.0 GHz</output></span>
+              <input type="range" id="rng-pf" min="1" max="30" step="0.1" value="12" />
+            </label>
+            <label class="control">
+              <span>Eficiencia <strong>η</strong> <output id="out-pe">0.65</output></span>
+              <input type="range" id="rng-pe" min="0.5" max="0.8" step="0.01" value="0.65" />
+            </label>
+            <div class="readouts">
+              <div class="readout"><span class="rl">Ganancia</span><span class="rv big" id="ro-pG">41.7</span><span class="ru">dBi</span></div>
+              <div class="readout"><span class="rl">HPBW</span><span class="rv big" id="ro-pH">1.46</span><span class="ru">°</span></div>
+              <div class="readout"><span class="rl">λ</span><span class="rv" id="ro-pl">2.50</span><span class="ru">cm</span></div>
+              <div class="readout"><span class="rl">D/λ</span><span class="rv" id="ro-pDl">48</span><span class="ru">longitudes de onda</span></div>
+            </div>
+          </div>
+          <div class="canvas-card glass reveal sim-view">
+            <canvas id="cv-paraSim" class="sim-canvas fill"></canvas>
+            <span class="view-badge">Diagrama polar en dB (0 a −40 dB)</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Brayan Stiven Correa">
+        <p>Caso inicial: plato de 1.2 m a 12 GHz (banda Ku, TV satelital): ≈ 41.7 dBi y haz de ~1.5°.</p>
+        <p>Duplicar D o duplicar f suma 6 dB y reduce el haz a la mitad. Llevar D a 10 m y f a 30 GHz: el haz se vuelve una "aguja" de centésimas de grado.</p>
+        <p>η reúne la eficiencia de iluminación, desborde, bloqueo y pérdidas; valores típicos 0.55–0.7.</p>
+      </aside>
+    </section>
+
+    <!-- 15. PARABÓLICA: APLICACIONES -->
+    <section class="slide theme-parabola" id="s15" data-title="Parabólica: aplicaciones" data-transition="rotate">
+      <div class="slide-inner">
+        <p class="kicker reveal"><span class="tag">Parabólica</span> 4 / 4</p>
+        <h2 class="title reveal">Aplicaciones de la parabólica</h2>
+        <div class="apps-grid four">
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><path d="M8 12a24 24 0 0 0 28 28M14 34l12-12M26 22l6-2-2 6zM20 44h16"/></svg>
+            <h4>TV satelital</h4><p>Platos offset de 60–120 cm en banda Ku (10.7–12.75 GHz) hacia satélites geoestacionarios.</p>
+          </div>
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><path d="M6 20a20 20 0 0 0 30 18M14 30l10-10M30 6l1 3 3 1-3 1-1 3-1-3-3-1 3-1zM40 18l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6z"/></svg>
+            <h4>Radioastronomía</h4><p>Radiotelescopios de decenas de metros (p. ej. 100 m) y arreglos interferométricos como ALMA.</p>
+          </div>
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><path d="M8 44V14M40 44V14M4 18h8M36 18h8M12 14h24"/><path d="M14 10h20" stroke-dasharray="3 3"/></svg>
+            <h4>Enlaces de microondas</h4><p>Radioenlaces punto a punto (6–80 GHz) entre torres de telecomunicaciones, con línea de vista.</p>
+          </div>
+          <div class="app glass tilt reveal">
+            <svg viewBox="0 0 48 48" class="app-ico"><circle cx="34" cy="12" r="5"/><path d="M6 30a14 14 0 0 0 16 12M10 38l8-8M30 18l-8 8" stroke-dasharray="2 3"/></svg>
+            <h4>Espacio profundo</h4><p>Red de Espacio Profundo (DSN) con platos de 34 y 70 m para comunicarse con sondas como las Voyager.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes" data-speaker="Brayan Stiven Correa">
+        <p>La parabólica domina cuando se necesita mucha ganancia: TV satelital, radioastronomía, radioenlaces y comunicaciones de espacio profundo.</p>
+        <p>Dato llamativo: las Voyager transmiten con unos 20 W a más de 20 mil millones de km; sin platos de 70 m (≈ 74 dBi en banda X) sería imposible recibirlas.</p>
+      </aside>
+    </section>
+
+    <!-- 16. CONCLUSIONES -->
+    <section class="slide" id="s18" data-title="Conclusiones y preguntas" data-transition="dissolve">
+      <canvas id="cv-final" class="final-canvas"></canvas>
+      <div class="slide-inner">
+        <p class="kicker reveal">Cierre</p>
+        <h2 class="title reveal">Conclusiones</h2>
+        <div class="concl-grid">
+          <div class="concl glass reveal" style="--accent: var(--cyan)"><h4 class="c-cyan">Dipolo</h4><p>Simple y económico. Omnidireccional, 2.15 dBi y ≈ 73 Ω. Referencia de todas las demás.</p></div>
+          <div class="concl glass reveal" style="--accent: var(--orange)"><h4 class="c-orange">Bocina</h4><p>Transición suave guía → espacio libre. Banda ancha y ganancia predecible.</p></div>
+          <div class="concl glass reveal" style="--accent: var(--violet)"><h4 class="c-violet">Parabólica</h4><p>La geometría concentra la energía: G ∝ (D/λ)². Altísima ganancia y haz muy angosto.</p></div>
+        </div>
+        <h2 class="questions reveal">¿Preguntas?</h2>
+        <div class="final-names reveal">
+          <span class="c-cyan">Fabián Steven Vargas</span>
+          <span class="c-orange">Sharon Mawenzy Martínez</span>
+          <span class="c-violet">Brayan Stiven Correa</span>
+        </div>
+        <p class="small muted reveal center">Universidad de Cundinamarca · Ingeniería Electrónica</p>
+      </div>
+      <aside class="notes" data-speaker="Fabián Steven Vargas (con todo el grupo)">
+        <p>Cada integrante resume en una frase su antena: Fabián (dipolo), Sharon (bocina), Brayan (parabólica).</p>
+        <p>Mensaje final: la elección de la antena depende de frecuencia, ganancia requerida, ancho de banda, tamaño y costo.</p>
+        <p>Abrir espacio para preguntas y agradecer.</p>
+      </aside>
+    </section>
+
+  </main>
+
+  <!-- ============ LIBRERÍAS (CDN) ============ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- ============ CÓDIGO PROPIO ============ -->
+  <script defer src="js/three-scenes.js"></script>
+  <script defer src="js/simuladores.js"></script>
+  <script defer src="js/main.js"></script>
+</body>
+</html>
